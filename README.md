@@ -28,8 +28,13 @@ Then ask:
 
 > Open the cache stats canvas
 
-The repository is initially private, so installation requires access to it.
-After marketplace approval, the public install command will be:
+Before marketplace approval, install the public repository directly:
+
+```shell
+copilot plugin install arafattehsin/cache-stats-extension
+```
+
+After marketplace approval, install it from Awesome Copilot:
 
 ```shell
 copilot plugin install cache-stats@awesome-copilot
