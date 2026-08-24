@@ -1,0 +1,260 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-24T09:25:05.782+10:00",
+  "title": "Design System: Cache Stats",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "primary",
+        "displayName": "Black Ink",
+        "canonical": "#111",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(27% 0 0)",
+          "oklch(39% 0 0)",
+          "oklch(51% 0 0)",
+          "oklch(63% 0 0)",
+          "oklch(75% 0 0)",
+          "oklch(87% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "paper": {
+        "role": "neutral",
+        "displayName": "White Card Stock",
+        "canonical": "#fbfbf7",
+        "tonalRamp": [
+          "oklch(15% 0.006 106)",
+          "oklch(27% 0.006 106)",
+          "oklch(39% 0.006 106)",
+          "oklch(51% 0.006 106)",
+          "oklch(63% 0.006 106)",
+          "oklch(75% 0.006 106)",
+          "oklch(87% 0.006 106)",
+          "oklch(95% 0.006 106)"
+        ]
+      },
+      "paper-muted": {
+        "role": "neutral",
+        "displayName": "Muted Paper",
+        "canonical": "#f0f0eb",
+        "tonalRamp": [
+          "oklch(15% 0.007 106)",
+          "oklch(27% 0.007 106)",
+          "oklch(39% 0.007 106)",
+          "oklch(51% 0.007 106)",
+          "oklch(63% 0.007 106)",
+          "oklch(75% 0.007 106)",
+          "oklch(87% 0.007 106)",
+          "oklch(95% 0.007 106)"
+        ]
+      },
+      "screen": {
+        "role": "neutral",
+        "displayName": "Desktop Gray",
+        "canonical": "#d7d7d2",
+        "tonalRamp": [
+          "oklch(15% 0.006 106)",
+          "oklch(27% 0.006 106)",
+          "oklch(39% 0.006 106)",
+          "oklch(51% 0.006 106)",
+          "oklch(63% 0.006 106)",
+          "oklch(75% 0.006 106)",
+          "oklch(87% 0.006 106)",
+          "oklch(95% 0.006 106)"
+        ]
+      },
+      "gray": {
+        "role": "neutral",
+        "displayName": "Utility Gray",
+        "canonical": "#757570",
+        "tonalRamp": [
+          "oklch(15% 0.005 106)",
+          "oklch(27% 0.005 106)",
+          "oklch(39% 0.005 106)",
+          "oklch(51% 0.005 106)",
+          "oklch(63% 0.005 106)",
+          "oklch(75% 0.005 106)",
+          "oklch(87% 0.005 106)",
+          "oklch(95% 0.005 106)"
+        ]
+      },
+      "gray-light": {
+        "role": "neutral",
+        "displayName": "Stipple Gray",
+        "canonical": "#b9b9b4",
+        "tonalRamp": [
+          "oklch(15% 0.005 106)",
+          "oklch(27% 0.005 106)",
+          "oklch(39% 0.005 106)",
+          "oklch(51% 0.005 106)",
+          "oklch(63% 0.005 106)",
+          "oklch(75% 0.005 106)",
+          "oklch(87% 0.005 106)",
+          "oklch(95% 0.005 106)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Heavy card titles, proof totals, and section emphasis."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Compact explanatory copy and table notes."
+      },
+      "data": {
+        "displayName": "Data",
+        "purpose": "Measured values, navigation counts, labels, and status records."
+      },
+      "clock": {
+        "displayName": "Expiry Clock",
+        "purpose": "The live cache expiry decision only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-stack",
+        "value": "5px 5px 0 var(--paper), 7px 7px 0 var(--ink), 12px 14px 18px rgba(0, 0, 0, .2)",
+        "purpose": "Registered paper-and-ink layers plus restrained ambient lift for the foreground card."
+      },
+      {
+        "name": "painted-control",
+        "value": "2px 2px 0 var(--ink)",
+        "purpose": "Mechanical offset for actionable buttons; removed while pressed."
+      },
+      {
+        "name": "menu-strip",
+        "value": "3px 3px 8px rgba(0, 0, 0, .16)",
+        "purpose": "Quiet separation between the utility strip and stippled desktop."
+      }
+    ],
+    "motion": [
+      {
+        "name": "card-step-in",
+        "value": "180ms steps(3, end)",
+        "purpose": "Single 3px translate-and-fade transition when the addressable foreground card changes; disabled for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow-panel",
+        "value": "610px"
+      },
+      {
+        "name": "compact-panel",
+        "value": "430px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Painted Button",
+      "kind": "button",
+      "refersTo": "button-painted",
+      "description": "Mechanical previous, next, and retry action with a square border and offset press state.",
+      "html": "<button class=\"ds-painted-button\" type=\"button\">Next ▶</button>",
+      "css": ".ds-painted-button { min-height: 34px; border: 2px solid var(--ink, #111111); border-radius: 0; color: var(--ink, #111111); background: var(--paper, #fbfbf7); box-shadow: 2px 2px 0 var(--ink, #111111); cursor: pointer; font: 700 11px \"Courier New\", Courier, monospace; } .ds-painted-button:hover, .ds-painted-button:active { color: var(--paper, #fbfbf7); background: var(--ink, #111111); } .ds-painted-button:active { transform: translate(2px, 2px); box-shadow: none; } .ds-painted-button:focus-visible { outline: 3px double var(--ink, #111111); outline-offset: 3px; } .ds-painted-button:disabled { color: var(--gray, #757570); border-color: var(--gray, #757570); box-shadow: none; cursor: default; }"
+    },
+    {
+      "name": "Stack Navigation",
+      "kind": "nav",
+      "refersTo": "navigation-tab",
+      "description": "Direct navigation among the three addressable cards.",
+      "html": "<nav class=\"ds-stack-nav\" aria-label=\"Stack cards\"><button type=\"button\" aria-current=\"page\">Live</button><button type=\"button\">Composition</button><button type=\"button\">Turns</button></nav>",
+      "css": ".ds-stack-nav { display: flex; border: 2px solid var(--ink, #111111); background: var(--paper, #fbfbf7); } .ds-stack-nav button { border: 0; border-left: 1px solid var(--ink, #111111); border-radius: 0; padding: 7px 12px; color: var(--ink, #111111); background: var(--paper, #fbfbf7); cursor: pointer; font: 700 13px Geneva, \"MS Sans Serif\", Tahoma, sans-serif; } .ds-stack-nav button:first-child { border-left: 0; } .ds-stack-nav button[aria-current=\"page\"] { color: var(--paper, #fbfbf7); background: var(--ink, #111111); } .ds-stack-nav button:hover:not([aria-current=\"page\"]) { background-image: radial-gradient(var(--ink, #111111) .6px, transparent .7px); background-size: 3px 3px; } .ds-stack-nav button:focus-visible { outline: 3px double var(--ink, #111111); outline-offset: 3px; }"
+    },
+    {
+      "name": "Shoebox Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Foreground stock with a striped title bar and registered offset layers.",
+      "html": "<article class=\"ds-card\"><header class=\"ds-card-bar\"><h2>Live Cache</h2><span>Card 1 of 3</span></header><div class=\"ds-card-content\">Decision and proof</div></article>",
+      "css": ".ds-card { overflow: hidden; border: 2px solid var(--ink, #111111); border-radius: 0; color: var(--ink, #111111); background: var(--paper, #fbfbf7); box-shadow: 5px 5px 0 var(--paper, #fbfbf7), 7px 7px 0 var(--ink, #111111), 12px 14px 18px rgba(0, 0, 0, .2); font-family: Geneva, \"MS Sans Serif\", Tahoma, sans-serif; } .ds-card-bar { display: flex; align-items: center; gap: 12px; min-height: 54px; padding: 7px 10px 7px 14px; border-bottom: 2px solid var(--ink, #111111); background-image: repeating-linear-gradient(0deg, var(--paper, #fbfbf7) 0 2px, var(--ink, #111111) 2px 3px); } .ds-card-bar h2 { margin: 0; padding: 3px 10px 4px; background: var(--paper, #fbfbf7); font: 900 24px/1 Chicago, Charcoal, Fixedsys, \"MS Sans Serif\", Tahoma, sans-serif; letter-spacing: -.035em; } .ds-card-bar span { margin-left: auto; padding: 3px 6px; background: var(--paper, #fbfbf7); font: 700 11px \"Courier New\", Courier, monospace; } .ds-card-content { padding: 22px; }"
+    },
+    {
+      "name": "Decision Band",
+      "kind": "custom",
+      "refersTo": "state-band",
+      "description": "Explicit cache state and supporting record in a decisive black action band.",
+      "html": "<div class=\"ds-state-band\" data-state=\"live\" role=\"status\"><span>CACHE LIVE</span><span class=\"ds-state-detail\">PREFIX READY</span></div>",
+      "css": ".ds-state-band { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 36px; padding: 7px 10px; color: var(--paper, #fbfbf7); background: var(--ink, #111111); font: 900 13px Chicago, Charcoal, Fixedsys, \"MS Sans Serif\", Tahoma, sans-serif; letter-spacing: .02em; } .ds-state-detail { font: 700 11px \"Courier New\", Courier, monospace; letter-spacing: 0; } .ds-state-band[data-state=\"pending\"], .ds-state-band[data-state=\"expired\"] { color: var(--ink, #111111); background-color: var(--paper, #fbfbf7); background-image: repeating-linear-gradient(135deg, var(--ink, #111111) 0 1px, transparent 1px 5px); border: 2px solid var(--ink, #111111); } .ds-state-band[data-state=\"pending\"] > *, .ds-state-band[data-state=\"expired\"] > * { padding: 1px 5px; background: var(--paper, #fbfbf7); }"
+    },
+    {
+      "name": "Result Stamp",
+      "kind": "chip",
+      "refersTo": "status-stamp",
+      "description": "Text-first SAVED, INVESTED, or REBUILT record with hard or double rules.",
+      "html": "<span class=\"ds-result-stamp\">SAVED / LAST TURN</span>",
+      "css": ".ds-result-stamp { display: inline-block; padding: 4px 7px; border: 3px double var(--ink, #111111); color: var(--ink, #111111); background: var(--paper, #fbfbf7); font: 700 11px \"Courier New\", Courier, monospace; transform: rotate(-1deg); }"
+    },
+    {
+      "name": "Composition Strip",
+      "kind": "custom",
+      "refersTo": "composition-strip",
+      "description": "One-bit token composition using solid and dithered segments.",
+      "html": "<div class=\"ds-composition-strip\" role=\"img\" aria-label=\"Prompt composition\"><span class=\"ds-solid\" style=\"width:50%\"></span><span class=\"ds-dither-heavy\" style=\"width:30%\"></span><span class=\"ds-dither-light\" style=\"width:20%\"></span></div>",
+      "css": ".ds-composition-strip { display: flex; height: 72px; border: 2px solid var(--ink, #111111); overflow: hidden; } .ds-composition-strip span { min-width: 2px; border-right: 1px solid var(--ink, #111111); } .ds-composition-strip span:last-child { border-right: 0; } .ds-solid { background: var(--ink, #111111); } .ds-dither-heavy { background-color: var(--gray, #757570); background-image: radial-gradient(var(--paper, #fbfbf7) .55px, transparent .7px); background-size: 3px 3px; } .ds-dither-light { background-color: var(--paper, #fbfbf7); background-image: radial-gradient(var(--ink, #111111) .6px, transparent .7px); background-size: 4px 4px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "HyperCard Shoebox Stack",
+    "overview": "Cache Stats is a one-bit utility stack: black ink on white card stock, stipple grays, hard rules, painted controls, and offset layers. It borrows the directness of classic HyperCard without turning the product into nostalgia or a conventional rounded analytics dashboard.\n\nThe system stages dense operational evidence as a three-card stack. Decisive text and patterned materials carry status, while data typography and hard geometry keep live decisions, cost proof, and forensic records legible.",
+    "keyCharacteristics": [
+      "One-bit black-and-white hierarchy with stipple gray materials",
+      "Square, hard-bordered controls and offset card layers",
+      "Chicago-like display labels, Geneva-like body text, and Courier data",
+      "Text-and-pattern status treatment with a single stepped card transition"
+    ],
+    "rules": [
+      {
+        "name": "The One-Bit Rule",
+        "body": "Meaning comes from black/white inversion, labels, borders, and pattern; do not introduce semantic color.",
+        "section": "colors"
+      },
+      {
+        "name": "The Pattern Means State Rule",
+        "body": "Status distinction must pair explicit text with solid, stippled, striped, or double-rule treatment so it never depends on tone alone.",
+        "section": "colors"
+      },
+      {
+        "name": "The Three-Face Rule",
+        "body": "Use display type for decisions, body type for explanation, and monospaced type for measured or addressable information.",
+        "section": "typography"
+      },
+      {
+        "name": "The Stack-Presence Rule",
+        "body": "Even while one card owns focus, the remaining cards stay spatially present as offset layers.",
+        "section": "layout"
+      },
+      {
+        "name": "The Offset, Then Air Rule",
+        "body": "Establish depth with registered hard offsets first; ambient blur is secondary and reserved for the outer shell.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Hard Edge Rule",
+        "body": "Keep controls, cards, and data regions square; distinguish them with 1px dividers, 2px structural borders, and occasional 3px double outlines.",
+        "section": "shapes"
+      },
+      {
+        "name": "The Decision-First Rule",
+        "body": "On operational cards, lead with the live expiry decision and cost-at-expiry proof; place composition and turn forensics deeper in the stack.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do use ink/paper inversion for active controls and decisive status bands.",
+      "Do use stipple, stripes, labels, and borders together so state survives without color.",
+      "Do keep the three-card stack addressable and restore focus after navigation.",
+      "Do disable the stepped card transition under reduced-motion preferences."
+    ],
+    "donts": [
+      "Don't introduce semantic colors, gradients, glass effects, rounded cards, or gauge-like chrome.",
+      "Don't flatten the cards into generic KPI tiles or hide the stack behind a single-panel shell.",
+      "Don't apply the Last/Session scope control to Turn History; it is always the session record.",
+      "Don't promote isolated measurements or copy treatments into shared tokens."
+    ]
+  }
+}

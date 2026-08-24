@@ -1,0 +1,39 @@
+{
+  "name": "cache-stats",
+  "version": "1.0.0",
+  "description": "A local-first GitHub Copilot canvas for prompt-cache reuse, expiry, token composition, and AIU cost.",
+  "type": "module",
+  "main": "extension.mjs",
+  "private": true,
+  "license": "MIT",
+  "author": {
+    "name": "Arafat Tehsin",
+    "url": "https://github.com/arafattehsin"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arafattehsin/cache-stats-extension.git"
+  },
+  "homepage": "https://github.com/arafattehsin/cache-stats-extension#readme",
+  "keywords": [
+    "aiu",
+    "cache",
+    "canvas",
+    "copilot",
+    "cost-visibility",
+    "prompt-cache",
+    "token-usage"
+  ],
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "check": "npm run check:modules && npm run check:ui && npm run check:package",
+    "check:modules": "node --check extension.mjs && node --check extensions/cache-stats/extension.mjs && node --check extensions/cache-stats/canvas.mjs && node --check extensions/cache-stats/stats.mjs && node --check extensions/cache-stats/cache-state.mjs",
+    "check:ui": "node scripts/check-ui.mjs",
+    "check:package": "node scripts/check-package.mjs"
+  },
+  "dependencies": {
+    "@github/copilot-sdk": "^1.0.11"
+  }
+}

@@ -1,0 +1,1084 @@
+<!doctype html>
+<!--
+THESIS: Cache Stats is a one-bit utility stack, not a rounded analytics dashboard.
+OWN-WORLD: Black ink, white card stock, stipple grays, hard borders, painted buttons, and offset cards.
+STORY: Read the live expiry decision first, inspect its token and cost proof, then move backward through the session record.
+FIRST VIEWPORT: A foremost Live Cache card is dominated by the expiry clock and a black action band; Composition and Turns remain visibly stacked behind it.
+FORM: HyperCard Shoebox Stack, card-based staging, selected from seed 626b1e4e.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Cache Stats</title>
+<style>
+  :root {
+    color-scheme: light;
+    --ink: #111;
+    --paper: #fbfbf7;
+    --paper-2: #f0f0eb;
+    --screen: #d7d7d2;
+    --gray: #757570;
+    --gray-light: #b9b9b4;
+    --rule: 2px solid var(--ink);
+    --shadow: 5px 5px 0 var(--paper), 7px 7px 0 var(--ink), 12px 14px 18px rgba(0, 0, 0, .2);
+    --display: Chicago, Charcoal, Fixedsys, "MS Sans Serif", Tahoma, sans-serif;
+    --body: Geneva, "MS Sans Serif", Tahoma, sans-serif;
+    --data: "Courier New", Courier, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html { min-height: 100%; background: var(--screen); }
+  body {
+    min-height: 100%;
+    margin: 0;
+    padding: 12px;
+    color: var(--ink);
+    background-color: var(--screen);
+    background-image: radial-gradient(var(--gray-light) .7px, transparent .8px);
+    background-size: 3px 3px;
+    font-family: var(--body);
+    font-size: 13px;
+    line-height: 1.4;
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: none;
+  }
+
+  button { font: inherit; }
+  button:focus-visible, [tabindex]:focus-visible {
+    outline: 3px double var(--ink);
+    outline-offset: 3px;
+  }
+
+  .shell {
+    width: min(100%, 760px);
+    margin: 0 auto;
+  }
+
+  .menu-bar {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    min-height: 38px;
+    border: var(--rule);
+    background: var(--paper);
+    box-shadow: 3px 3px 8px rgba(0, 0, 0, .16);
+  }
+
+  .product {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+    padding: 7px 10px;
+    font-family: var(--display);
+    font-weight: 900;
+    letter-spacing: -.02em;
+    white-space: nowrap;
+  }
+
+  .stack-mark {
+    position: relative;
+    width: 20px;
+    height: 16px;
+    border: 2px solid var(--ink);
+    background: var(--paper);
+    box-shadow: 3px 3px 0 var(--paper), 5px 5px 0 var(--ink);
+  }
+
+  .menu-nav {
+    display: flex;
+    align-self: stretch;
+    justify-content: center;
+  }
+
+  .menu-nav button, .scope button {
+    appearance: none;
+    border: 0;
+    border-left: 1px solid var(--ink);
+    border-radius: 0;
+    padding: 7px 12px;
+    color: var(--ink);
+    background: var(--paper);
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .menu-nav button:last-child { border-right: 1px solid var(--ink); }
+  .menu-nav button[aria-current="page"],
+  .scope button[aria-pressed="true"] {
+    color: var(--paper);
+    background: var(--ink);
+  }
+  .menu-nav button:hover:not([aria-current="page"]),
+  .scope button:hover:not([aria-pressed="true"]) {
+    background-image: radial-gradient(var(--ink) .6px, transparent .7px);
+    background-size: 3px 3px;
+  }
+
+  .scope { display: flex; align-self: stretch; }
+  .scope button { border-left: 1px solid var(--ink); }
+  .scope button:last-child { border-right: 0; }
+  .scope-note {
+    align-self: stretch;
+    display: grid;
+    place-items: center;
+    padding: 0 10px;
+    border-left: 1px solid var(--ink);
+    font-family: var(--data);
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .deck {
+    position: relative;
+    margin: 18px 15px 22px 0;
+    isolation: isolate;
+  }
+
+  .deck::before, .deck::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: flex-end;
+    border: var(--rule);
+    background-color: var(--paper);
+    padding: 3px 2px;
+    font-family: var(--data);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+    pointer-events: none;
+  }
+  .deck::before {
+    content: "Turn History";
+    z-index: -2;
+    transform: translate(18px, 18px);
+    background-image: radial-gradient(var(--gray-light) .6px, transparent .7px);
+    background-size: 3px 3px;
+  }
+  .deck::after {
+    content: "Composition";
+    z-index: -1;
+    transform: translate(9px, 9px);
+    background-color: var(--paper-2);
+    background-image: repeating-linear-gradient(0deg, transparent 0 2px, rgba(0, 0, 0, .1) 2px 3px);
+  }
+
+  .card {
+    position: relative;
+    min-height: 620px;
+    overflow: hidden;
+    border: var(--rule);
+    background: var(--paper);
+    box-shadow: var(--shadow);
+    animation: card-in .18s steps(3, end) both;
+  }
+
+  @keyframes card-in {
+    from { transform: translate(3px, 3px); opacity: .65; }
+    to { transform: translate(0, 0); opacity: 1; }
+  }
+
+  .card-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 54px;
+    padding: 7px 10px 7px 14px;
+    border-bottom: var(--rule);
+    background-image: repeating-linear-gradient(0deg, var(--paper) 0 2px, var(--ink) 2px 3px);
+  }
+
+  .card-bar h1 {
+    display: inline-block;
+    margin: 0;
+    padding: 3px 10px 4px;
+    background: var(--paper);
+    font-family: var(--display);
+    font-size: clamp(20px, 4vw, 28px);
+    font-weight: 900;
+    letter-spacing: -.035em;
+    line-height: 1;
+  }
+
+  .card-position {
+    margin-left: auto;
+    padding: 3px 6px;
+    background: var(--paper);
+    font-family: var(--data);
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .card-content { padding: clamp(16px, 4vw, 28px); }
+
+  .state-band {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 36px;
+    padding: 7px 10px;
+    color: var(--paper);
+    background: var(--ink);
+    font-family: var(--display);
+    font-weight: 900;
+    letter-spacing: .02em;
+  }
+  .state-band .menu-state {
+    font-family: var(--data);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+  .state-band[data-state="pending"],
+  .state-band[data-state="expired"] {
+    color: var(--ink);
+    background-color: var(--paper);
+    background-image: repeating-linear-gradient(135deg, var(--ink) 0 1px, transparent 1px 5px);
+    border: var(--rule);
+  }
+  .state-band[data-state="pending"] > *,
+  .state-band[data-state="expired"] > * {
+    padding: 1px 5px;
+    background: var(--paper);
+  }
+
+  .live-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(220px, .75fr);
+    gap: clamp(20px, 5vw, 42px);
+    padding: clamp(18px, 5vw, 38px) 0;
+    border-bottom: var(--rule);
+  }
+
+  .clock {
+    font-family: var(--data);
+    font-size: clamp(54px, 13vw, 98px);
+    font-weight: 700;
+    letter-spacing: -.08em;
+    line-height: .86;
+  }
+  .clock-caption {
+    margin-top: 9px;
+    font-family: var(--data);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+  .action-copy {
+    max-width: 42ch;
+    margin: 14px 0 0;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .time-ruler {
+    position: relative;
+    height: 20px;
+    margin-top: 21px;
+    border: var(--rule);
+    background-image: repeating-linear-gradient(90deg, transparent 0 19px, var(--ink) 19px 20px);
+  }
+  .time-ruler span {
+    display: block;
+    height: 100%;
+    width: 0;
+    background-color: var(--ink);
+  }
+  .time-ruler::before, .time-ruler::after {
+    position: absolute;
+    top: 23px;
+    font-family: var(--data);
+    font-size: 10px;
+  }
+  .time-ruler::before { content: "NOW"; left: 0; }
+  .time-ruler::after { content: "EXPIRY"; right: 0; }
+
+  .proof {
+    border-left: var(--rule);
+    padding-left: clamp(16px, 4vw, 28px);
+  }
+  .proof h2, .section-title {
+    margin: 0;
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: -.025em;
+  }
+  .proof-number {
+    margin-top: 10px;
+    font-family: var(--display);
+    font-size: clamp(34px, 8vw, 58px);
+    font-weight: 900;
+    letter-spacing: -.055em;
+    line-height: .9;
+  }
+  .proof-number small {
+    font-family: var(--data);
+    font-size: 12px;
+    letter-spacing: 0;
+  }
+  .proof p { margin: 10px 0 0; }
+  .stamp {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 4px 7px;
+    border: 3px double var(--ink);
+    font-family: var(--data);
+    font-size: 11px;
+    font-weight: 700;
+    transform: rotate(-1deg);
+  }
+
+  .reuse-block { padding: 22px 0 6px; }
+  .reuse-line {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .reuse-line strong {
+    font-family: var(--display);
+    font-size: 30px;
+    line-height: 1;
+  }
+  .reuse-line span { font-weight: 700; }
+  .reuse-ruler {
+    display: flex;
+    height: 26px;
+    margin-top: 10px;
+    border: var(--rule);
+    overflow: hidden;
+  }
+  .reuse-ruler .used { background: var(--ink); }
+  .reuse-ruler .rest {
+    flex: 1;
+    background-image: radial-gradient(var(--gray) .7px, transparent .8px);
+    background-size: 3px 3px;
+  }
+
+  .ledger {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    table-layout: fixed;
+  }
+  .ledger th, .ledger td {
+    padding: 8px 6px;
+    border-top: 1px solid var(--ink);
+    text-align: left;
+    vertical-align: top;
+  }
+  .ledger th {
+    width: 33%;
+    font-weight: 700;
+  }
+  .ledger td.value {
+    width: 22%;
+    font-family: var(--data);
+    font-weight: 700;
+    text-align: right;
+  }
+  .ledger td.note {
+    color: var(--gray);
+    font-size: 12px;
+  }
+
+  .explain {
+    margin: 22px 0 0;
+    padding: 12px 14px;
+    border: 1px solid var(--ink);
+    background-image: radial-gradient(var(--gray-light) .6px, transparent .7px);
+    background-size: 3px 3px;
+  }
+  .explain span { background: var(--paper); }
+
+  .composition-map {
+    display: flex;
+    height: 72px;
+    margin: 22px 0 16px;
+    border: var(--rule);
+    overflow: hidden;
+  }
+  .composition-map span { min-width: 2px; border-right: 1px solid var(--ink); }
+  .composition-map span:last-child { border-right: 0; }
+  .fill-solid { background: var(--ink); }
+  .fill-dither-75 {
+    background-color: var(--gray);
+    background-image: radial-gradient(var(--paper) .55px, transparent .7px);
+    background-size: 3px 3px;
+  }
+  .fill-dither-25 {
+    background-color: var(--paper);
+    background-image: radial-gradient(var(--ink) .6px, transparent .7px);
+    background-size: 4px 4px;
+  }
+  .fill-lines {
+    background-image: repeating-linear-gradient(135deg, transparent 0 3px, var(--ink) 3px 4px);
+  }
+
+  .legend {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+  }
+  .legend-item {
+    display: grid;
+    grid-template-columns: 18px 1fr auto;
+    gap: 8px;
+    align-items: center;
+    padding: 8px;
+    background: var(--paper);
+  }
+  .swatch { width: 18px; height: 18px; border: 1px solid var(--ink); }
+  .legend-item b { font-family: var(--data); }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-top: 26px;
+    border: var(--rule);
+  }
+  .fact {
+    min-height: 84px;
+    padding: 12px;
+    border-right: 1px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+  }
+  .fact:nth-child(2n) { border-right: 0; }
+  .fact:nth-last-child(-n + 2) { border-bottom: 0; }
+  .fact strong {
+    display: block;
+    margin-top: 5px;
+    font-family: var(--display);
+    font-size: 24px;
+    line-height: 1;
+  }
+  .fact span { font-size: 11px; color: var(--gray); }
+
+  .plot {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 118px;
+    margin-top: 16px;
+    padding: 10px 8px 0;
+    border: var(--rule);
+    background-image:
+      repeating-linear-gradient(0deg, transparent 0 23px, rgba(0, 0, 0, .18) 23px 24px);
+  }
+  .plot-col {
+    position: relative;
+    flex: 1;
+    min-width: 5px;
+    height: var(--height);
+    border: 1px solid var(--ink);
+    background-image: radial-gradient(var(--ink) .6px, transparent .7px);
+    background-size: 3px 3px;
+  }
+  .plot-col .spent {
+    position: absolute;
+    inset: auto 0 0;
+    height: var(--spent);
+    background: var(--ink);
+  }
+  .plot-col.rebuilt {
+    background-image: repeating-linear-gradient(135deg, var(--ink) 0 1px, transparent 1px 4px);
+  }
+  .plot-col.current { outline: 3px double var(--ink); outline-offset: 2px; }
+  .plot-axis {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 7px;
+    font-family: var(--data);
+    font-size: 10px;
+  }
+
+  .turn-scroll {
+    max-height: 340px;
+    margin-top: 24px;
+    overflow: auto;
+    border: var(--rule);
+  }
+  .turn-scroll:focus { outline-offset: 4px; }
+  .turn-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .turn-table th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    padding: 7px 8px;
+    color: var(--paper);
+    background: var(--ink);
+    font-family: var(--data);
+    font-size: 10px;
+    text-align: left;
+  }
+  .turn-table td {
+    padding: 9px 8px;
+    border-bottom: 1px solid var(--ink);
+    vertical-align: top;
+  }
+  .turn-table tr:last-child td { border-bottom: 0; }
+  .turn-table tr.current td {
+    background-image: radial-gradient(var(--gray-light) .55px, transparent .7px);
+    background-size: 3px 3px;
+  }
+  .turn-table b, .turn-table code { font-family: var(--data); }
+  .turn-table small { display: block; margin-top: 2px; color: var(--gray); }
+  .result-mark {
+    display: inline-block;
+    padding: 2px 4px;
+    border: 1px solid var(--ink);
+    font-family: var(--data);
+    font-size: 10px;
+    font-weight: 700;
+  }
+  .result-mark.rebuilt {
+    border: 3px double var(--ink);
+    background-image: repeating-linear-gradient(135deg, transparent 0 3px, rgba(0, 0, 0, .2) 3px 4px);
+  }
+
+  .card-nav {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+    padding-top: 14px;
+    border-top: var(--rule);
+  }
+  .painted {
+    appearance: none;
+    min-height: 34px;
+    border: var(--rule);
+    border-radius: 0;
+    color: var(--ink);
+    background: var(--paper);
+    box-shadow: 2px 2px 0 var(--ink);
+    cursor: pointer;
+    font-family: var(--data);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .painted:hover:not(:disabled), .painted:active:not(:disabled) {
+    color: var(--paper);
+    background: var(--ink);
+  }
+  .painted:active:not(:disabled) {
+    transform: translate(2px, 2px);
+    box-shadow: none;
+  }
+  .painted:disabled {
+    cursor: default;
+    color: var(--gray);
+    border-color: var(--gray);
+    box-shadow: none;
+  }
+  .painted.next { justify-self: end; }
+  .card-count {
+    font-family: var(--data);
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  .status-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 12px;
+    padding: 7px 9px;
+    border: var(--rule);
+    background: var(--paper);
+    font-family: var(--data);
+    font-size: 10px;
+  }
+  .status-footer span:last-child { margin-left: auto; }
+
+  .message {
+    display: grid;
+    min-height: 500px;
+    place-content: center;
+    padding: 32px;
+    text-align: center;
+  }
+  .message strong {
+    font-family: var(--display);
+    font-size: 28px;
+  }
+  .message p { max-width: 46ch; }
+
+  @media (max-width: 610px) {
+    body { padding: 7px; }
+    .menu-bar { grid-template-columns: 1fr auto; }
+    .menu-nav {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      border-top: 1px solid var(--ink);
+    }
+    .menu-nav button { flex: 1; }
+    .scope { grid-column: 2; grid-row: 1; }
+    .live-grid { grid-template-columns: 1fr; }
+    .proof {
+      border-top: var(--rule);
+      border-left: 0;
+      padding-top: 22px;
+      padding-left: 0;
+    }
+    .legend, .facts { grid-template-columns: 1fr; }
+    .fact { border-right: 0; }
+    .fact:nth-last-child(-n + 2) { border-bottom: 1px solid var(--ink); }
+    .fact:last-child { border-bottom: 0; }
+    .status-footer span:last-child { width: 100%; margin-left: 0; }
+  }
+
+  @media (max-width: 430px) {
+    .product { font-size: 12px; }
+    .scope button, .menu-nav button { padding-inline: 8px; font-size: 11px; }
+    .card-content { padding: 14px; }
+    .card { min-height: 590px; }
+    .card-position { display: none; }
+    .clock { font-size: 58px; }
+    .ledger th { width: 38%; }
+    .ledger td.note { display: none; }
+    .turn-table th:nth-child(4), .turn-table td:nth-child(4) { display: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div class="shell" id="app" aria-busy="true">
+  <header class="menu-bar">
+    <div class="product"><span class="stack-mark" aria-hidden="true"></span>Cache Stats</div>
+  </header>
+  <div class="deck">
+    <main class="card">
+      <div class="message"><strong>Opening stack…</strong><p>Reading the local session record.</p></div>
+    </main>
+  </div>
+</div>
+
+<script>
+const N = n => Math.round(Number(n) || 0).toLocaleString("en-US");
+const K = n => {
+  n = Math.round(Number(n) || 0);
+  if (Math.abs(n) < 1000) return String(n);
+  if (Math.abs(n) < 1e6) {
+    const k = n / 1000;
+    return (k >= 100 ? Math.round(k) : k.toFixed(1)) + "k";
+  }
+  return (n / 1e6).toFixed(2) + "M";
+};
+const P = (f, d = 0) => ((Number(f) || 0) * 100).toFixed(d) + "%";
+const D = ms => {
+  const s = (Number(ms) || 0) / 1000;
+  if (s < 1) return Math.round(s * 1000) + "ms";
+  if (s < 60) return s.toFixed(1) + "s";
+  const m = Math.floor(s / 60);
+  return m + "m " + Math.round(s - m * 60) + "s";
+};
+const AIU = n => {
+  n = Number(n) || 0;
+  return n >= 100 ? n.toFixed(0) : n >= 10 ? n.toFixed(1) : n.toFixed(2);
+};
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({
+  "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"
+}[c]));
+const clamp = (n, min, max) => Math.min(max, Math.max(min, n));
+
+const cards = ["live", "composition", "turns"];
+const hashCard = location.hash.slice(1);
+let card = cards.includes(hashCard) ? hashCard : localStorage.getItem("cacheStatsCard") || "live";
+if (!cards.includes(card)) card = "live";
+let scope = localStorage.getItem("cacheStatsScope") || "last";
+let lastData = null;
+let lastSig = "";
+let expiryAt = null;
+let ttl = 300;
+
+function clockFmt(seconds) {
+  const s = Math.max(0, Math.round(seconds));
+  if (s < 60) return "0:" + String(s).padStart(2, "0");
+  return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+}
+
+function gapFmt(seconds) {
+  const s = Math.max(0, Math.round(Number(seconds) || 0));
+  if (s >= 86400) return Math.floor(s / 86400) + "d " + Math.floor((s % 86400) / 3600) + "h";
+  if (s >= 3600) return Math.floor(s / 3600) + "h " + Math.floor((s % 3600) / 60) + "m";
+  if (s >= 60) return Math.floor(s / 60) + "m " + String(s % 60).padStart(2, "0") + "s";
+  return s + "s";
+}
+
+function cacheState() {
+  if (!expiryAt) {
+    return {
+      name: "pending",
+      label: "CHECKPOINT PENDING",
+      clock: "--:--",
+      caption: "waiting for the next model call",
+      copy: "Send another message to establish the live cache window.",
+      fraction: 0
+    };
+  }
+  const left = (expiryAt - Date.now()) / 1000;
+  if (left <= 0) {
+    return {
+      name: "expired",
+      label: "CACHE EXPIRED",
+      clock: "EXPIRED",
+      caption: "the reuse window has closed",
+      copy: "The next message will rebuild the prompt prefix.",
+      fraction: 0
+    };
+  }
+  if (left <= 60) {
+    return {
+      name: "act",
+      label: "ACT NOW",
+      clock: clockFmt(left),
+      caption: "remaining before expiry",
+      copy: "Reply now to preserve the current prompt cache.",
+      fraction: clamp(left / ttl, 0, 1)
+    };
+  }
+  return {
+    name: "live",
+    label: "CACHE LIVE",
+    clock: clockFmt(left),
+    caption: "remaining before expiry",
+    copy: "You can keep working without paying to rebuild the prefix.",
+    fraction: clamp(left / ttl, 0, 1)
+  };
+}
+
+function navButton(id, label) {
+  return `<button type="button" data-card="${id}" aria-current="${card === id ? "page" : "false"}">${label}</button>`;
+}
+
+function shell(data, content, title) {
+  const position = cards.indexOf(card) + 1;
+  const state = cacheState();
+  const updated = data?.generatedAt ? new Date(data.generatedAt).toLocaleTimeString() : "—";
+  const session = data?.sessionId ? esc(data.sessionId.slice(0, 8)) : "—";
+  return `
+    <header class="menu-bar">
+      <div class="product"><span class="stack-mark" aria-hidden="true"></span>Cache Stats</div>
+      <nav class="menu-nav" aria-label="Stack cards">
+        ${navButton("live", "Live")}
+        ${navButton("composition", "Composition")}
+        ${navButton("turns", "Turns")}
+      </nav>
+      ${card === "turns"
+        ? '<div class="scope-note">Session record</div>'
+        : `<div class="scope" role="group" aria-label="Data scope">
+            <button type="button" data-scope="last" aria-pressed="${scope === "last"}">Last</button>
+            <button type="button" data-scope="session" aria-pressed="${scope === "session"}">Session</button>
+          </div>`}
+    </header>
+    <div class="deck">
+      <main class="card" data-card-name="${card}">
+        <header class="card-bar">
+          <h1>${esc(title)}</h1>
+          <span class="card-position">Card ${position} of ${cards.length}</span>
+        </header>
+        ${content}
+      </main>
+    </div>
+    <footer class="status-footer">
+      <span id="menu-cache-state">${esc(state.label)} ${state.name === "live" || state.name === "act" ? state.clock : ""}</span>
+      <span>LOCAL / READ-ONLY / ZERO MODEL TOKENS</span>
+      <span>SESSION ${session} / ${esc(updated)}</span>
+    </footer>`;
+}
+
+function cardNav() {
+  const index = cards.indexOf(card);
+  const previous = cards[index - 1];
+  const next = cards[index + 1];
+  return `
+    <nav class="card-nav" aria-label="Move through stack">
+      <button class="painted" type="button" ${previous ? `data-card="${previous}"` : "disabled"}>◀ Previous</button>
+      <span class="card-count">${index + 1} / ${cards.length}</span>
+      <button class="painted next" type="button" ${next ? `data-card="${next}"` : "disabled"}>Next ▶</button>
+    </nav>`;
+}
+
+function liveCard(data, t) {
+  const h = data.cacheHealth || {};
+  const state = cacheState();
+  const invested = t.aiu - t.baselineAiu;
+  const saved = invested > .005 ? false : true;
+  const proofTitle = invested > .005 ? "Cache investment" : "Cost avoided";
+  const proofNumber = invested > .005 ? "+" + AIU(invested) : AIU(t.savedAiu);
+  const proofCopy = invested > .005
+    ? `Spent ${AIU(t.aiu)} AIU against an uncached baseline of ${AIU(t.baselineAiu)}. The write premium repays on reuse.`
+    : `Spent ${AIU(t.aiu)} AIU instead of ${AIU(t.baselineAiu)} — ${P(t.savedPct)} below uncached.`;
+  const consequence = h.breaks
+    ? `${h.breaks} cache rebuild${h.breaks === 1 ? "" : "s"} cost about ${AIU(h.wastedAiu)} avoidable AIU in this session.`
+    : "No avoidable rebuild cost has been recorded in this session.";
+  const exposure = data.lastTurn.rebuildExposureAiu;
+  const exposureCopy = exposure > 0
+    ? `If the live prefix expires, rebuilding the same entry context is estimated to cost ${AIU(exposure)} more AIU than reusing it.`
+    : "Rebuild exposure is unavailable until billing rates are recorded for the current entry call.";
+
+  return `<div class="card-content">
+    <div class="state-band" id="state-band" data-state="${state.name}" role="status">
+      <span id="state-label">${state.label}</span>
+      <span class="menu-state">${h.breaks ? N(h.rebuiltTokens) + " TOKENS RE-CACHED" : "PREFIX READY"}</span>
+    </div>
+
+    <section class="live-grid" aria-label="Live cache decision">
+      <div>
+        <div class="clock" id="clock-value">${state.clock}</div>
+        <div class="clock-caption" id="clock-caption">${state.caption}</div>
+        <p class="action-copy" id="action-copy">${state.copy}</p>
+        <div class="time-ruler" aria-hidden="true"><span id="expiry-progress" style="width:${state.fraction * 100}%"></span></div>
+      </div>
+      <div class="proof">
+        <h2>${proofTitle}</h2>
+        <div class="proof-number">${proofNumber}<small> AIU</small></div>
+        <p>${proofCopy}</p>
+        <span class="stamp">${saved ? "SAVED" : "INVESTED"} / ${scope === "session" ? "SESSION" : "LAST TURN"}</span>
+      </div>
+    </section>
+
+    <section class="reuse-block" aria-label="Prompt reuse">
+      <div class="reuse-line"><strong>${P(t.hitRate)}</strong><span>of prompt tokens were actually reused</span></div>
+      <div class="reuse-ruler" role="img" aria-label="${P(t.hitRate)} reused">
+        <span class="used" style="width:${clamp(t.hitRate, 0, 1) * 100}%"></span><span class="rest"></span>
+      </div>
+    </section>
+
+    <table class="ledger" aria-label="Current cost record">
+      <tbody>
+        <tr><th>Prompt</th><td class="value">${N(t.promptTokens)}</td><td class="note">tokens presented to the model</td></tr>
+        <tr><th>From cache</th><td class="value">${N(t.cacheRead)}</td><td class="note">billed at the cache-read rate</td></tr>
+        <tr><th>Newly cached</th><td class="value">${N(t.cacheWrite)}</td><td class="note">paid write that may repay next turn</td></tr>
+        <tr><th>Cost at expiry</th><td class="value">${exposure > 0 ? "≈" + AIU(exposure) + " AIU" : "—"}</td><td class="note">${esc(exposureCopy)}</td></tr>
+        <tr><th>Session consequence</th><td class="value">${h.breaks ? AIU(h.wastedAiu) + " AIU" : "NONE"}</td><td class="note">${esc(consequence)}</td></tr>
+      </tbody>
+    </table>
+
+    ${cardNav()}
+  </div>`;
+}
+
+function compositionCard(data, t) {
+  const total = Math.max(1, t.promptTokens);
+  const segments = [
+    ["Reused", t.cacheRead, "fill-solid", "read from cache"],
+    ["Newly cached", t.cacheWrite, "fill-dither-75", "written for later reuse"],
+    ["Fresh input", t.freshInput, "fill-dither-25", "new prompt material"],
+  ];
+  return `<div class="card-content">
+    <h2 class="section-title">${N(t.promptTokens)} prompt tokens</h2>
+    <div class="composition-map" role="img" aria-label="Prompt composition: ${segments.map(x => `${x[0]} ${N(x[1])}`).join(", ")}">
+      ${segments.map(([, value, cls]) => `<span class="${cls}" style="width:${(value / total) * 100}%"></span>`).join("")}
+    </div>
+    <div class="legend">
+      ${segments.map(([label, value, cls]) => `<div class="legend-item"><span class="swatch ${cls}"></span><span>${label}</span><b>${K(value)}</b></div>`).join("")}
+      <div class="legend-item"><span class="swatch fill-lines"></span><span>Output</span><b>${K(t.output)}</b></div>
+    </div>
+
+    <table class="ledger" aria-label="Token ledger">
+      <tbody>
+        <tr><th>Cache read</th><td class="value">${P(t.cacheRead / total)}</td><td class="note">${N(t.cacheRead)} tokens reduced input cost</td></tr>
+        <tr><th>Cache write</th><td class="value">${P(t.cacheWrite / total)}</td><td class="note">${N(t.cacheWrite)} tokens paid the write premium</td></tr>
+        <tr><th>Fresh input</th><td class="value">${P(t.freshInput / total)}</td><td class="note">${N(t.freshInput)} tokens were new</td></tr>
+        <tr><th>Output</th><td class="value">${N(t.output)}</td><td class="note">${N(t.reasoning)} reasoning tokens</td></tr>
+      </tbody>
+    </table>
+
+    <div class="facts" aria-label="Model activity">
+      <div class="fact">Model calls<strong>${N(t.calls)}</strong><span>${t.subAgentCalls ? N(t.subAgentCalls) + " via sub-agent" : "all direct"}</span></div>
+      <div class="fact">Model time<strong>${D(t.durationMs)}</strong><span>${D(t.avgTtftMs)} average first token</span></div>
+      <div class="fact">Model<strong>${esc(t.model)}</strong><span>${esc(t.effort || "default")} reasoning effort</span></div>
+      <div class="fact">${scope === "session" ? "Turns" : "Finish"}<strong>${scope === "session" ? N(data.turns.length) : esc(t.finishReason || "unknown")}</strong><span>${scope === "session" ? N(t.compactions) + " compactions" : N(t.calls) + " calls in turn"}</span></div>
+    </div>
+    ${cardNav()}
+  </div>`;
+}
+
+function costPlot(turns, currentIndex) {
+  const max = Math.max(...turns.map(t => Math.max(t.baselineAiu, t.aiu)), .001);
+  return `<figure aria-label="AIU spent against uncached baseline by turn">
+    <div class="plot">
+      ${turns.map(t => {
+        const span = Math.max(t.baselineAiu, t.aiu, .001);
+        const height = Math.max(5, span / max * 100);
+        const spent = clamp(t.aiu / span * 100, 0, 100);
+        return `<div class="plot-col ${t.rebuilt ? "rebuilt" : ""} ${t.index === currentIndex ? "current" : ""}"
+          style="--height:${height}%;--spent:${spent}%"
+          title="Turn ${t.index}: spent ${AIU(t.aiu)} AIU; uncached ${AIU(t.baselineAiu)} AIU">
+          <span class="spent"></span>
+        </div>`;
+      }).join("")}
+    </div>
+    <figcaption class="plot-axis"><span>TURN 1</span><span>SOLID = SPENT / DITHER = AVOIDED</span><span>TURN ${turns.length}</span></figcaption>
+  </figure>`;
+}
+
+function turnsCard(data) {
+  const rows = data.turns.slice().reverse().map(t => {
+    const invested = t.aiu - t.baselineAiu;
+    const result = t.rebuilt
+      ? `<span class="result-mark rebuilt">REBUILT</span><small>+${AIU(t.wastedAiu)} AIU wasted</small>`
+      : invested > .005
+        ? `<span class="result-mark">INVESTED</span><small>+${AIU(invested)} AIU</small>`
+        : `<span class="result-mark">SAVED</span><small>−${AIU(t.savedAiu)} AIU</small>`;
+    return `<tr class="${t.index === data.lastTurn.index ? "current" : ""}">
+      <td><b>#${t.index}</b><small>${t.gapSeconds == null ? "start" : gapFmt(t.gapSeconds) + " gap"}</small></td>
+      <td><b>${P(t.hitRate)}</b><small>${K(t.cacheRead)} read / ${K(t.cacheWrite)} written</small></td>
+      <td><code>${AIU(t.aiu)} AIU</code><small>${AIU(t.baselineAiu)} uncached</small>${result}</td>
+      <td><b>${t.calls}</b><small>${D(t.durationMs)}</small></td>
+    </tr>`;
+  }).join("");
+
+  return `<div class="card-content">
+    <h2 class="section-title">Cost record by turn</h2>
+    ${costPlot(data.turns, data.lastTurn.index)}
+    <div class="turn-scroll" tabindex="0" aria-label="Scrollable turn history">
+      <table class="turn-table">
+        <thead><tr><th>TURN</th><th>REUSE</th><th>COST</th><th>CALLS</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    ${cardNav()}
+  </div>`;
+}
+
+function messageCard(data, title, message, retry = false) {
+  return shell(data, `<div class="message"><strong>${esc(title)}</strong><p>${esc(message)}</p>${retry ? '<button class="painted" type="button" data-retry>Try again</button>' : ""}</div>`, title);
+}
+
+function render(data) {
+  const app = document.getElementById("app");
+  app.setAttribute("aria-busy", "false");
+  if (data.error) {
+    app.innerHTML = messageCard(data, "Session store unavailable", data.error, true);
+    wire();
+    return;
+  }
+  if (!data.lastTurn) {
+    app.innerHTML = messageCard(data, "No usage recorded", "Send a Copilot message, then return to this stack.");
+    wire();
+    return;
+  }
+  const t = scope === "session" ? data.session : data.lastTurn;
+  const views = {
+    live: [liveCard(data, t), "Live Cache"],
+    composition: [compositionCard(data, t), "Composition"],
+    turns: [turnsCard(data), "Turn History"]
+  };
+  app.innerHTML = shell(data, views[card][0], views[card][1]);
+  wire();
+  paintCountdown();
+}
+
+function navigateCard(target, push = true) {
+  if (!cards.includes(target) || target === card) return;
+  card = target;
+  localStorage.setItem("cacheStatsCard", card);
+  if (push) history.pushState({ card }, "", "#" + card);
+  if (lastData) {
+    render(lastData);
+    requestAnimationFrame(() => document.querySelector(`.menu-nav button[data-card="${target}"]`)?.focus());
+  }
+}
+
+function wire() {
+  document.querySelectorAll("[data-card]").forEach(button => {
+    button.addEventListener("click", () => navigateCard(button.dataset.card));
+  });
+  document.querySelectorAll("[data-scope]").forEach(button => {
+    button.addEventListener("click", () => {
+      scope = button.dataset.scope;
+      localStorage.setItem("cacheStatsScope", scope);
+      if (lastData) {
+        render(lastData);
+        requestAnimationFrame(() => document.querySelector(`[data-scope="${scope}"]`)?.focus());
+      }
+    });
+  });
+  const retry = document.querySelector("[data-retry]");
+  if (retry) retry.addEventListener("click", tick);
+}
+
+function paintCountdown() {
+  const state = cacheState();
+  const band = document.getElementById("state-band");
+  const label = document.getElementById("state-label");
+  const clock = document.getElementById("clock-value");
+  const caption = document.getElementById("clock-caption");
+  const copy = document.getElementById("action-copy");
+  const progress = document.getElementById("expiry-progress");
+  const menu = document.getElementById("menu-cache-state");
+  if (band) band.dataset.state = state.name;
+  if (label) label.textContent = state.label;
+  if (clock) clock.textContent = state.clock;
+  if (caption) caption.textContent = state.caption;
+  if (copy) copy.textContent = state.copy;
+  if (progress) progress.style.width = state.fraction * 100 + "%";
+  if (menu) menu.textContent = state.label + ((state.name === "live" || state.name === "act") ? " " + state.clock : "");
+}
+
+async function tick() {
+  try {
+    const response = await fetch("/api/stats", { cache: "no-store" });
+    const data = await response.json();
+    const expires = data.cacheHealth?.cacheExpiresAt;
+    expiryAt = expires ? Date.parse(expires) : null;
+    if (data.cacheHealth?.cacheTtlSeconds) ttl = data.cacheHealth.cacheTtlSeconds;
+    lastData = data;
+    const signature = JSON.stringify([
+      data.error, data.turns?.length, data.lastTurn?.calls, data.lastTurn?.promptTokens,
+      data.lastTurn?.output, data.session?.aiu, data.cacheHealth?.breaks, expires
+    ]);
+    if (signature !== lastSig) {
+      lastSig = signature;
+      render(data);
+    }
+  } catch (error) {
+    const data = { error: String(error) };
+    lastData = data;
+    render(data);
+  }
+}
+
+window.addEventListener("popstate", () => {
+  const target = location.hash.slice(1);
+  if (cards.includes(target)) navigateCard(target, false);
+});
+
+document.addEventListener("keydown", event => {
+  if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey) return;
+  const tag = event.target?.tagName;
+  if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+  const index = cards.indexOf(card);
+  if (event.key === "ArrowLeft" && index > 0) navigateCard(cards[index - 1]);
+  if (event.key === "ArrowRight" && index < cards.length - 1) navigateCard(cards[index + 1]);
+});
+
+if (!location.hash) history.replaceState({ card }, "", "#" + card);
+tick();
+setInterval(tick, 2000);
+setInterval(paintCountdown, 1000);
+</script>
+</body>
+</html>
