@@ -1,6 +1,6 @@
 {
   "name": "cache-stats",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Live prompt-cache, token, and AIU statistics for GitHub Copilot sessions.",
   "type": "module",
   "main": "extension.mjs",

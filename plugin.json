@@ -1,7 +1,8 @@
 {
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "cache-stats",
   "description": "Shows live prompt-cache reuse, expiry, token composition, and AIU cost for the current GitHub Copilot session.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": {
     "name": "Arafat Tehsin",
     "url": "https://github.com/arafattehsin"
@@ -18,6 +19,9 @@
     "prompt-cache",
     "token-usage"
   ],
-  "logo": "assets/preview.png",
-  "extensions": "extensions"
+  "extensions": {
+    "com.github.copilot": {
+      "logo": "assets/preview.png"
+    }
+  }
 }

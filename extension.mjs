@@ -1,3 +1,3 @@
-// Keep repository-root installs working while the marketplace consumes the
-// self-contained extension package under extensions/cache-stats.
-import "./extensions/cache-stats/extension.mjs";
+// Keep direct extension installs working while Agent Plugin clients discover
+// the packaged canvas from the Copilot client namespace.
+import "./com.github.copilot/extensions/cache-stats/extension.mjs";
