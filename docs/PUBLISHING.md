@@ -3,7 +3,8 @@
 The repository supports two distribution paths from the same source:
 
 - Direct extension install from the repository root
-- GitHub Copilot plugin install from the `extensions/cache-stats` package
+- Agent Plugin install with canvas content under
+  `com.github.copilot/extensions/cache-stats`
 
 ## 1. Validate the private repository
 
@@ -21,21 +22,21 @@ Reinstall after changes because Copilot caches installed plugin content.
 1. Review the full Git history for credentials, private session data, and local
    paths that should not be published.
 2. Confirm that `assets/preview.png` remains anonymized and illustrative.
-3. Keep version `1.0.0` synchronized in `package.json`,
-   `extensions/cache-stats/package.json`, and `plugin.json`.
+3. Keep version `1.0.1` synchronized in `package.json`,
+   `com.github.copilot/extensions/cache-stats/package.json`, and `plugin.json`.
 4. Run `npm ci` and `npm run check` from a clean checkout.
 5. Change the GitHub repository visibility to public.
 6. Create an immutable release tag:
 
    ```shell
-   git tag -a v1.0.0 -m "Cache Stats v1.0.0"
-   git push origin v1.0.0
+   git tag -a v1.0.1 -m "Cache Stats v1.0.1"
+   git push origin v1.0.1
    ```
 
 7. Record the tag's full commit:
 
    ```shell
-   git rev-list -n 1 v1.0.0
+   git rev-list -n 1 v1.0.1
    ```
 
 Do not move or replace a submitted release tag. Publish a new semantic version
@@ -54,9 +55,9 @@ Use these values:
 | Plugin name | `cache-stats` |
 | GitHub repository | `arafattehsin/cache-stats-extension` |
 | Plugin path | Leave blank; the plugin is at repository root |
-| Ref to review | `v1.0.0` |
+| Ref to review | `v1.0.1` |
 | Commit SHA | Full SHA returned by `git rev-list` |
-| Version | `1.0.0` |
+| Version | `1.0.1` |
 | License | `MIT` |
 | Author | `Arafat Tehsin` |
 | Author URL | `https://github.com/arafattehsin` |

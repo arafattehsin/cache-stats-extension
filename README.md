@@ -88,10 +88,10 @@ installed plugin content.
 
 | Path | Role |
 | --- | --- |
-| `plugin.json` | GitHub Copilot plugin metadata and marketplace entry |
+| `plugin.json` | Agent Plugins v1 manifest and Copilot catalog metadata |
 | `copilot-extension.json` | Direct canvas-extension install metadata |
 | `extension.mjs` | Direct-install bridge to the packaged extension |
-| `extensions/cache-stats/` | Self-contained marketplace canvas extension |
+| `com.github.copilot/extensions/cache-stats/` | Spec-namespaced canvas extension package |
 | `assets/preview.png` | Anonymized catalog preview |
 | `scripts/` | Package and embedded-UI checks |
 | `docs/PUBLISHING.md` | Public release and Awesome Copilot submission guide |
